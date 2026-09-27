@@ -107,21 +107,6 @@ export function Navbar({ savedCount = 0, activeSourcesCount = 4, onOpenSearch }:
           >
             <Search className="h-4 w-4" />
           </button>
-
-          {/* Bookmarks link / button */}
-          <Link
-            href="/#tersimpan"
-            className="relative inline-flex h-9 items-center gap-1.5 rounded-lg border border-border/60 bg-background px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-          >
-            <Bookmark className="h-4 w-4" />
-            <span className="hidden sm:inline">Tersimpan</span>
-            {savedCount > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1 text-[11px] font-semibold text-white">
-                {savedCount}
-              </span>
-            )}
-          </Link>
-
           {/* Theme Switcher */}
           <ThemeToggle />
 

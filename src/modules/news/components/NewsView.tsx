@@ -5,13 +5,55 @@ import { NewsArticle } from "../@types";
 import { NewsService, NewsSourceId } from "../newsService";
 import { CardNews } from "@/components/ui/CardNews";
 import { Tabs } from "@/components/ui/Tabs";
-import { Newspaper, AlertCircle, RefreshCw } from "lucide-react";
+import Image from "next/image";
+import { Globe, Newspaper, AlertCircle, RefreshCw } from "lucide-react";
 
 const SOURCE_TABS = [
-  { id: "all", label: "Semua Berita" },
-  { id: "cnn", label: "CNN Indonesia" },
-  { id: "kompas", label: "Kompas" },
-  { id: "tribun", label: "Tribun News" },
+  {
+    id: "all",
+    label: "Semua Berita",
+    icon: <Globe className="h-4 w-4 text-primary" />,
+  },
+  {
+    id: "cnn",
+    label: "CNN Indonesia",
+    icon: (
+      <Image
+        src="/logo/cnn-indonesia-seeklogo.svg"
+        alt="CNN Indonesia"
+        width={16}
+        height={16}
+        className="h-4 w-4 object-contain"
+      />
+    ),
+  },
+  {
+    id: "kompas",
+    label: "Kompas",
+    icon: (
+      <Image
+        src="/logo/Logo_Kompasdotcom-removebg-preview.webp"
+        alt="Kompas"
+        width={16}
+        height={16}
+        className="h-4 w-4 object-contain"
+      />
+    ),
+  },
+  {
+    id: "tribun",
+    label: "Tribun News",
+    icon: (
+      <Image
+        src="https://www.google.com/s2/favicons?domain=tribunnews.com&sz=64"
+        alt="Tribun News"
+        width={16}
+        height={16}
+        unoptimized
+        className="h-4 w-4 rounded-full object-contain"
+      />
+    ),
+  },
 ];
 
 export function NewsView() {
