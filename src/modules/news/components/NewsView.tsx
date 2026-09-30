@@ -5,8 +5,9 @@ import { NewsArticle } from "../@types";
 import { NewsService, NewsSourceId } from "../newsService";
 import { CardNews } from "@/components/ui/CardNews";
 import { Tabs } from "@/components/ui/Tabs";
+import Loading from "@/components/ui/Loading";
 import Image from "next/image";
-import { Globe, Newspaper, AlertCircle, RefreshCw } from "lucide-react";
+import { Globe, Newspaper, AlertCircle } from "lucide-react";
 
 const SOURCE_TABS = [
   {
@@ -85,6 +86,13 @@ export function NewsView() {
     });
   };
 
+  const handleSourceChange = (newSourceId: string) => {
+    if (newSourceId !== selectedSource) {
+      setLoading(true);
+      setSelectedSource(newSourceId as NewsSourceId);
+    }
+  };
+
   // Muat artikel dari API NewsService berdasarkan tab sumber yang dipilih
   useEffect(() => {
     let isCancelled = false;
@@ -101,32 +109,25 @@ export function NewsView() {
     };
   }, [selectedSource]);
 
+  const activeTab = SOURCE_TABS.find((t) => t.id === selectedSource);
+
   return (
     <div className="space-y-6">
       {/* Header Feed & Tabs Sumber Media */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/60 pb-4">
         <div className="flex items-center gap-2">
-          <Newspaper className="h-5 w-5 text-primary" />
-          <h2 className="text-xl font-bold text-foreground tracking-tight">Tajuk Berita Terkini</h2>
-          {loading && (
-            <span className="flex items-center gap-1.5 text-xs text-muted-foreground animate-pulse ml-2">
-              <RefreshCw className="h-3.5 w-3.5 animate-spin text-primary" />
-              Memuat...
-            </span>
-          )}
+          <h2 className="text-xl font-bold text-foreground tracking-tight">Berita Terbaru</h2>
         </div>
 
         {/* Tab pengalih sumber berita (Fluid Tabs) */}
-        <Tabs
-          tabs={SOURCE_TABS}
-          value={selectedSource}
-          onChange={(id) => setSelectedSource(id as NewsSourceId)}
-          size="sm"
-        />
+        <Tabs tabs={SOURCE_TABS} value={selectedSource} onChange={handleSourceChange} size="sm" />
       </div>
 
-      {/* Empty State */}
-      {!loading && articles.length === 0 && (
+      {/* Loading State saat mengambil data atau berpindah tab */}
+      {loading ? (
+        <Loading text={`Memuat artikel dari ${activeTab?.label || "sumber berita"}...`} />
+      ) : articles.length === 0 ? (
+        /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border p-12 text-center bg-card/40">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground mb-3">
             <AlertCircle className="h-6 w-6" />
@@ -136,22 +137,22 @@ export function NewsView() {
             Artikel dari sumber yang dipilih belum tersedia saat ini.
           </p>
         </div>
+      ) : (
+        /* Grid Kartu Berita */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {articles.map((article, index) => {
+            return (
+              <CardNews
+                key={`${article.id}-${index}`}
+                article={article}
+                featured={index === 0}
+                isBookmarked={bookmarkedIds.includes(article.id)}
+                onToggleBookmark={toggleBookmark}
+              />
+            );
+          })}
+        </div>
       )}
-
-      {/* Grid Kartu Berita */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articles.map((article, index) => {
-          return (
-            <CardNews
-              key={`${article.id}-${index}`}
-              article={article}
-              featured={index === 0} // Artikel pertama sebagai hero/featured card
-              isBookmarked={bookmarkedIds.includes(article.id)}
-              onToggleBookmark={toggleBookmark}
-            />
-          );
-        })}
-      </div>
     </div>
   );
 }

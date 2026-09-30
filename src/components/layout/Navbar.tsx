@@ -2,41 +2,19 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Bookmark, Search, Menu, X, Radio, Flame } from "lucide-react";
+import { Search, Menu, X, Radio } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
-  savedCount?: number;
   activeSourcesCount?: number;
   onOpenSearch?: () => void;
 }
 
-export function Navbar({ savedCount = 0, activeSourcesCount = 4, onOpenSearch }: NavbarProps) {
+export function Navbar({ activeSourcesCount = 4, onOpenSearch }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/85 backdrop-blur-md transition-colors">
-      {/* Top micro-bar for Live Status */}
-      <div className="hidden sm:flex items-center justify-between border-b border-border/40 px-4 sm:px-8 py-1 text-xs text-muted-foreground bg-muted/30">
-        <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1.5 font-medium text-emerald-600 dark:text-emerald-400">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-            </span>
-            Live Aggregator
-          </span>
-          <span className="text-border">|</span>
-          <span>{activeSourcesCount} Media Terkoneksi (CNN, BBC, Antara, CNBC)</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1">
-            <Flame className="h-3.5 w-3.5 text-amber-500" />
-            Topik Hangat: Kecerdasan Buatan & Ekonomi Digital
-          </span>
-        </div>
-      </div>
-
       {/* Main Navbar */}
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
         {/* Brand Logo */}
@@ -148,16 +126,6 @@ export function Navbar({ savedCount = 0, activeSourcesCount = 4, onOpenSearch }:
               <span>Sumber Media</span>
               <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold">
                 {activeSourcesCount} Aktif
-              </span>
-            </Link>
-            <Link
-              href="/#tersimpan"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-lg px-3 py-2 text-muted-foreground hover:bg-muted/40 flex items-center justify-between"
-            >
-              <span>Artikel Tersimpan</span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                {savedCount}
               </span>
             </Link>
           </div>

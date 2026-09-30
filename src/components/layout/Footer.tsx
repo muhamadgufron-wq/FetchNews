@@ -12,22 +12,15 @@ export function Footer() {
               href="/"
               className="inline-flex items-center gap-2.5 font-bold text-lg text-foreground tracking-tight"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-xs">
-                <Newspaper className="h-4 w-4" />
-              </div>
               <span>
                 Fetch<span className="text-blue-600 dark:text-blue-400">News</span>
               </span>
             </Link>
             <p className="text-sm max-w-md text-muted-foreground leading-relaxed">
-              Platform agregator berita modern yang mengumpulkan, menyeleksi, dan
-              menyajikan artikel terkini dari berbagai media terpercaya secara real-time
-              dalam satu antarmuka yang bersih dan cepat.
+              Platform agregator berita modern yang mengumpulkan, menyeleksi, dan menyajikan artikel
+              terkini dari berbagai media terpercaya secara real-time dalam satu antarmuka yang
+              bersih dan cepat.
             </p>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500"></span>
-              <span>Sistem Pengambilan Berita: Beroperasi Normal</span>
-            </div>
           </div>
 
           {/* Quick Categories */}
@@ -87,16 +80,17 @@ export function Footer() {
 
         {/* Bottom divider & disclaimer */}
         <div className="mt-10 border-t border-border/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-          <p>© {new Date().getFullYear()} FetchNews. Hak cipta artikel milik masing-masing penerbit media.</p>
+          <p>
+            © {new Date().getFullYear()} FetchNews. Hak cipta artikel milik masing-masing penerbit
+            media.
+          </p>
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
               Multi-Source Verification
             </span>
             <span>•</span>
-            <span className="flex items-center gap-1">
-              Dibangun dengan Next.js & Bun
-            </span>
+            <span className="flex items-center gap-1">Dibangun dengan Next.js & Bun</span>
           </div>
         </div>
       </div>
