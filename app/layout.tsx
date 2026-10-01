@@ -10,6 +10,7 @@ const rubik = Rubik({
 });
 
 import { Navbar, Footer } from "@/components/layout";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {
   title: "FetchNews - Portal Berita Multi-Sumber Terkini",
@@ -30,10 +31,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id" suppressHydrationWarning className={`h-full antialiased ${rubik.variable}`}>
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors selection:bg-blue-600 selection:text-white">
-        <Navbar />
-        <div className="flex-1 flex flex-col">{children}</div>
-        <Footer />
+        <QueryProvider>
+          <Navbar />
+          <div className="flex-1 flex flex-col">{children}</div>
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );
 }
+

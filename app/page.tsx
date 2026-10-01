@@ -1,7 +1,5 @@
-import Link from "next/link";
-import { ArrowDown, Newspaper } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { NewsView } from "@/modules/news";
+import { NewsView } from "@/modules/news/components/NewsView";
+
 
 export default function Home() {
   return (

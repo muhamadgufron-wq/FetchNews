@@ -1,4 +1,4 @@
-export interface CNNNewsData {
+export type CNNNewsData = {
   title: string;
   image_thumbnail: string;
   image_full: string;
@@ -6,10 +6,10 @@ export interface CNNNewsData {
   link: string;
   slug: string;
   content: string;
-}
+};
 
-export interface CNNNewsResponse {
+export type CNNNewsResponse = {
   status: boolean;
   data: CNNNewsData[];
   timestamp?: string;
-}
+};

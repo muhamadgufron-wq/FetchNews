@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Newspaper, Rss, ShieldCheck } from "lucide-react";
+import { Rss, ShieldCheck } from "lucide-react";
 
 export function Footer() {
   return (

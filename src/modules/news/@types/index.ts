@@ -1,8 +1,9 @@
-export * from "./cnn.d";
-export * from "./kompas.d";
-export * from "./tribunNews.d";
+export type * from "./cnn";
+export type * from "./kompas";
+export type * from "./tribunNews";
 
-export interface NewsArticle {
+
+export type NewsArticle = {
   id: string;
   title: string;
   link: string;
@@ -15,4 +16,4 @@ export interface NewsArticle {
     name: string;
     badgeColor: string;
   };
-}
+};

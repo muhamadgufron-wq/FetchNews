@@ -16,7 +16,8 @@ Dibangun dengan arsitektur **Domain-Driven Modular** di atas **Next.js 16 (App R
   - Fitur ekspansi (*Show more / Baca selengkapnya*) dengan modal/drawer detail artikel.
   - Format waktu humanis (*time-ago*) dan lencana kategori.
   - Fitur simpan artikel (*Bookmarks*) tersimpan di `localStorage`.
-- ⚡ **Loading State Animatif**: Indikator pemuatan berbasis `loading-dev` (*Leap*) yang aktif secara dinamis saat fetch data pertama kali maupun saat berpindah tab media.
+- ⚡ **State Management & Caching (TanStack Query v5)**: Caching pintar per-sumber berita dengan `staleTime: 5 menit`. Pindah antar-tab berita berlangsung **instan (0 ms)** tanpa membebani server/API publik berulang kali. Dilengkapi tombol manual *Refresh / Sinkronisasi*.
+- 🔄 **Loading State Animatif**: Indikator pemuatan berbasis `loading-dev` (*Leap*) yang aktif secara dinamis saat fetch data pertama kali maupun saat memuat data baru.
 - 🛡️ **Type Safety Penuh**: Validasi data menyeluruh dengan antarmuka TypeScript untuk masing-masing vendor API.
 
 ---
@@ -25,6 +26,7 @@ Dibangun dengan arsitektur **Domain-Driven Modular** di atas **Next.js 16 (App R
 
 - **Framework**: [Next.js 16](https://nextjs.org/) (App Router & Turbopack)
 - **UI & Runtime**: [React 19](https://react.dev/)
+- **Server & Client State**: [TanStack Query v5 (@tanstack/react-query)](https://tanstack.com/query)
 - **Bahasa**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
@@ -42,7 +44,7 @@ FetchNews/
 ├── app/                              # Next.js App Router
 │   ├── favicon.ico
 │   ├── globals.css                   # Global styles & variable Tailwind
-│   ├── layout.tsx                    # Root layout & navbar
+│   ├── layout.tsx                    # Root layout (QueryProvider, Navbar, Footer)
 │   └── page.tsx                      # Halaman utama (memanggil modul NewsView)
 ├── public/                           # Static assets
 │   └── logo/                         # Logo resmi media (CNN, Kompas, dll)
@@ -54,6 +56,8 @@ FetchNews/
 │   │       ├── Tabs.tsx              # Komponen tab navigasi berpindah sumber
 │   │       └── ... (button, card, input)
 │   ├── lib/                          # Utility & helper global (cn, date formatter)
+│   ├── providers/
+│   │   └── QueryProvider.tsx         # TanStack Query Client Provider (React 19 ready)
 │   └── modules/
 │       └── news/                     # Domain Module: News
 │           ├── @types/               # Definisi tipe TypeScript
@@ -61,6 +65,8 @@ FetchNews/
 │           │   ├── kompas.d.ts       # Kontrak API Kompas
 │           │   ├── tribunNews.d.ts   # Kontrak API Tribun News
 │           │   └── index.ts          # Export tipe & standar universal `NewsArticle`
+│           ├── hooks/
+│           │   └── useNewsQuery.ts   # Custom hook TanStack Query (Smart Cache per Source)
 │           ├── services/             # Client service per portal media
 │           │   ├── cnnService.ts     # Fetch & parser berita CNN
 │           │   ├── kompasService.ts  # Fetch & parser berita Kompas
@@ -68,7 +74,6 @@ FetchNews/
 │           ├── newsService.ts        # Master Aggregator (Deduplikasi & Filter)
 │           ├── components/
 │           │   └── NewsView.tsx      # View controller & layout feed berita
-│           └── index.ts              # Entry point modul news
 ```
 
 ---

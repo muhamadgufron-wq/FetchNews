@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { NewsArticle } from "../@types";
-import { NewsService, NewsSourceId } from "../newsService";
+import { useState } from "react";
+import { NewsSourceId } from "../newsService";
+import { useNewsQuery } from "../hooks/useNewsQuery";
 import { CardNews } from "@/components/ui/CardNews";
 import { Tabs } from "@/components/ui/Tabs";
 import Loading from "@/components/ui/Loading";
 import Image from "next/image";
-import { Globe, Newspaper, AlertCircle } from "lucide-react";
+import { Globe, AlertCircle, RefreshCw } from "lucide-react";
 
 const SOURCE_TABS = [
   {
@@ -58,9 +58,16 @@ const SOURCE_TABS = [
 ];
 
 export function NewsView() {
-  const [articles, setArticles] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedSource, setSelectedSource] = useState<NewsSourceId>("all");
+
+  // TanStack Query: otomatis caching per source & instan saat pindah tab
+  const {
+    data: articles = [],
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+  } = useNewsQuery(selectedSource);
 
   // Inisialisasi bookmarks dari localStorage dengan lazy initializer
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(() => {
@@ -86,46 +93,56 @@ export function NewsView() {
     });
   };
 
-  const handleSourceChange = (newSourceId: string) => {
-    if (newSourceId !== selectedSource) {
-      setLoading(true);
-      setSelectedSource(newSourceId as NewsSourceId);
-    }
-  };
-
-  // Muat artikel dari API NewsService berdasarkan tab sumber yang dipilih
-  useEffect(() => {
-    let isCancelled = false;
-
-    NewsService.getArticles(selectedSource).then((data) => {
-      if (!isCancelled) {
-        setArticles(data);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [selectedSource]);
-
   const activeTab = SOURCE_TABS.find((t) => t.id === selectedSource);
 
   return (
     <div className="space-y-6">
       {/* Header Feed & Tabs Sumber Media */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/60 pb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <h2 className="text-xl font-bold text-foreground tracking-tight">Berita Terbaru</h2>
+          
+          {/* Tombol manual refresh untuk memaksa perbarui data */}
+          <button
+            onClick={() => refetch()}
+            disabled={isFetching}
+            title="Perbarui berita dari sumber"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 cursor-pointer"
+          >
+            <RefreshCw className={`h-3 w-3 ${isFetching ? "animate-spin text-primary" : ""}`} />
+            <span>{isFetching ? "Menyinkronkan..." : "Perbarui"}</span>
+          </button>
         </div>
 
         {/* Tab pengalih sumber berita (Fluid Tabs) */}
-        <Tabs tabs={SOURCE_TABS} value={selectedSource} onChange={handleSourceChange} size="sm" />
+        <Tabs
+          tabs={SOURCE_TABS}
+          value={selectedSource}
+          onChange={(id) => setSelectedSource(id as NewsSourceId)}
+          size="sm"
+        />
       </div>
 
-      {/* Loading State saat mengambil data atau berpindah tab */}
-      {loading ? (
+      {/* Loading State saat mengambil data baru yang belum ada di cache */}
+      {isLoading ? (
         <Loading text={`Memuat artikel dari ${activeTab?.label || "sumber berita"}...`} />
+      ) : error ? (
+        /* Error State */
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-red-500/30 p-12 text-center bg-red-500/5">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10 text-red-500 mb-3">
+            <AlertCircle className="h-6 w-6" />
+          </div>
+          <h3 className="text-base font-semibold text-foreground">Gagal memuat berita</h3>
+          <p className="mt-1 text-sm text-muted-foreground max-w-sm">
+            Terjadi kendala saat menghubungi server penyedia berita. Silakan coba lagi.
+          </p>
+          <button
+            onClick={() => refetch()}
+            className="mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            Coba Lagi
+          </button>
+        </div>
       ) : articles.length === 0 ? (
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border p-12 text-center bg-card/40">
@@ -156,3 +173,4 @@ export function NewsView() {
     </div>
   );
 }
+

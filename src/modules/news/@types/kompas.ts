@@ -1,13 +1,13 @@
-export interface KompasNewsData {
+export type KompasNewsData = {
   title: string;
   link: string;
   image: string;
   category: string;
   date: string;
-}
+};
 
-export interface KompasNewsResponse {
+export type KompasNewsResponse = {
   status: boolean;
   data: KompasNewsData[];
   timestamp?: string;
-}
+};
